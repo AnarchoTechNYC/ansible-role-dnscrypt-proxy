@@ -1,0 +1,24 @@
+---
+dependencies: []
+galaxy_info:
+  role_name: dnscrypt-proxy
+  author: AnarchoTechNYC
+  description: Provision a dnscrypt-proxy server in a number of small- to medium-sized deployments.
+  company: Eat The Rich, Inc.
+  license: AGPL-3.0-or-later # SPDX tag from https://spdx.org/licenses/
+  min_ansible_version: 2.7
+  platforms:
+  - name: Raspbian
+    versions:
+      - all
+  - name: Debian
+    versions:
+      - 9
+  galaxy_tags:
+    - dns
+    - dnscryptv2
+    - dns-over-tls
+    - dns-over-https
+    - DoT
+    - DoH
+    - privacy
