@@ -1,0 +1,58 @@
+---
+- name: Register dnscrypt-proxy variables.
+  when: ansible_machine.startswith('arm')
+  set_fact:
+    dnscrypt_proxy_arch: 'arm'
+    dnscrypt_proxy_dir: '{{ dnscrypt_proxy_install_dir }}/{{ ansible_system | lower }}-arm'
+
+- name: Create dnscrypt-proxy directory.
+  file:
+    path: '{{ dnscrypt_proxy_install_dir }}'
+    state: directory
+    owner: root
+    group: root
+    mode: '700'
+
+- name: Download and install dnscrypt-proxy binary.
+  unarchive:
+    src: 'https://github.com/DNSCrypt/dnscrypt-proxy/releases/download/{{ dnscrypt_proxy_version }}/dnscrypt-proxy-{{ ansible_system | lower }}_{{ dnscrypt_proxy_arch }}-{{ dnscrypt_proxy_version }}.tar.gz'
+    dest: '{{ dnscrypt_proxy_install_dir }}'
+    remote_src: true
+    owner: root
+    group: root
+    mode: '700'
+    creates: '{{ dnscrypt_proxy_dir }}/dnscrypt-proxy'
+
+# TODO: Write the dnscrypt-proxy config file from a template.
+#       For now, just copy the default config.
+- name: Write dnscrypt-proxy configuration.
+  copy:
+    src: '{{ dnscrypt_proxy_dir }}/example-dnscrypt-proxy.toml'
+    dest: '{{ dnscrypt_proxy_dir }}/dnscrypt-proxy.toml'
+    remote_src: yes
+    force: false
+    owner: root
+    group: root
+    mode: '600'
+
+- name: Set dnscrypt-proxy listen address.
+  lineinfile:
+    path: '{{ dnscrypt_proxy_dir }}/dnscrypt-proxy.toml'
+    regexp: "^listen_addresses = \\['.*']$"
+    line: "listen_addresses = ['{{ dnscrypt_proxy_listen_address }}']"
+    validate: '{{ dnscrypt_proxy_dir }}/dnscrypt-proxy -check -config %s'
+
+# TODO: While this is a convenient thing, ultimately we should handle
+#       service installation ourselves with a template so we can sense
+#       changes during subsequent runs.
+- name: Install the dnscrypt-proxy service.
+  shell: >
+     {{ dnscrypt_proxy_dir }}/dnscrypt-proxy -service install 
+     >> /tmp/dnscrypt-proxy.install.log 2>&1 || true
+  changed_when: false
+
+- name: Enable and start the dnscrypt-proxy service.
+  service:
+    name: dnscrypt-proxy
+    enabled: true
+    state: started

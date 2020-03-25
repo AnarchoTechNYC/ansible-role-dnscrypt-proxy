@@ -1,4 +1,8 @@
 # Role defaults for the dnscrypt-proxy role.
 ---
+dnscrypt_proxy_version: '2.0.41'
+dnscrypt_proxy_install_prefix: /opt/local
+dnscrypt_proxy_listen_address: ':53' # Port 53 on all interfaces.
 
-# TODO
+# Variables primarily for internal use.
+dnscrypt_proxy_install_dir: '{{ dnscrypt_proxy_install_prefix }}/dnscrypt-proxy'

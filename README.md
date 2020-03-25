@@ -4,10 +4,8 @@ An [Ansible role](https://docs.ansible.com/ansible/latest/user_guide/playbooks_r
 
 ## Role variables
 
-> :construction: TK-TODO
-
-## Advanced dnscrypt-proxy configuration
-
-> :construction: TK-TODO
+* `dnscrypt_proxy_version` - Version of `dnscrypt-proxy` as released from [the `DNSCrypt/dnscrypt-proxy` repository](https://github.com/DNSCrypt/dnscrypt-proxy/releases) to download and use.
+* `dnscrypt_proxy_install_prefix` - Absolute filesystem path prefix in which to install `dnscrypt-proxy`. Default: `/opt/local`.
+* `dnscrypt_proxy_listen_address` - Address on which to offer `dnscrypt-proxy`'s services. The package default is `127.0.0.1:53`, but this role's default is `:53` (port 53 on all interfaces).
 
 See the [`defaults/main.yaml`](defaults/main.yaml) file for a more thorough example.
