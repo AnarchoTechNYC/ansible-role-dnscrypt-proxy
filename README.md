@@ -9,3 +9,20 @@ An [Ansible role](https://docs.ansible.com/ansible/latest/user_guide/playbooks_r
 * `dnscrypt_proxy_listen_address` - Address on which to offer `dnscrypt-proxy`'s services. The package default is `127.0.0.1:53`, but this role's default is `:53` (port 53 on all interfaces).
 
 See the [`defaults/main.yaml`](defaults/main.yaml) file for a more thorough example.
+
+# Testing
+
+Use [Molecule](https://molecule.readthedocs.io/en/latest/) to run the tests. (You'll also need to install [Docker](https://docker.com/), as tests are run in Docker containers.) Here's how to install Molecule into a virtual environment.
+
+```sh
+# Molecule is written in Python, so you'll also need Python.
+python -m venv venv                      # Create your virtual environment.
+source venv/bin/activate                 # Activate it.
+pip install molecule ansible-lint docker # Install testing tools.
+
+# Then, you can run the tests:
+molecule test
+
+# When you're done, deactivate your virtual environment.
+deactivate
+```

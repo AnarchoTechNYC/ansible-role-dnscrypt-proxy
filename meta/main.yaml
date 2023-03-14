@@ -17,8 +17,5 @@ galaxy_info:
   galaxy_tags:
     - dns
     - dnscryptv2
-    - dns-over-tls
-    - dns-over-https
-    - DoT
-    - DoH
+    - dnscrypt
     - privacy

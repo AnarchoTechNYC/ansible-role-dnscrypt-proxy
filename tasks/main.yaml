@@ -1,9 +1,10 @@
 ---
 - name: Register dnscrypt-proxy variables.
-  when: ansible_machine.startswith('arm')
+  when: ansible_machine.startswith('arm') or
+        'aarch64' == ansible_machine
   set_fact:
     dnscrypt_proxy_arch: 'arm'
-    dnscrypt_proxy_dir: '{{ dnscrypt_proxy_install_dir }}/{{ ansible_system | lower }}-arm'
+    dnscrypt_proxy_dir: '{{ dnscrypt_proxy_install_dir }}/{{ ansible_facts.system | lower }}-arm'
 
 - name: Create dnscrypt-proxy directory.
   file:
@@ -15,7 +16,7 @@
 
 - name: Download and install dnscrypt-proxy binary.
   unarchive:
-    src: 'https://github.com/DNSCrypt/dnscrypt-proxy/releases/download/{{ dnscrypt_proxy_version }}/dnscrypt-proxy-{{ ansible_system | lower }}_{{ dnscrypt_proxy_arch }}-{{ dnscrypt_proxy_version }}.tar.gz'
+    src: 'https://github.com/DNSCrypt/dnscrypt-proxy/releases/download/{{ dnscrypt_proxy_version }}/dnscrypt-proxy-{{ ansible_facts.system | lower }}_{{ dnscrypt_proxy_arch | default(ansible_facts.architecture) }}-{{ dnscrypt_proxy_version }}.tar.gz'
     dest: '{{ dnscrypt_proxy_install_dir }}'
     remote_src: true
     owner: root
@@ -47,7 +48,7 @@
 #       changes during subsequent runs.
 - name: Install the dnscrypt-proxy service.
   shell: >
-     {{ dnscrypt_proxy_dir }}/dnscrypt-proxy -service install 
+     {{ dnscrypt_proxy_dir }}/dnscrypt-proxy -service install
      >> /tmp/dnscrypt-proxy.install.log 2>&1 || true
   changed_when: false
 

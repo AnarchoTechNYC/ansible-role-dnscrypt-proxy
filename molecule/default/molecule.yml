@@ -1,0 +1,21 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+lint: |
+  set -e
+  yamllint .   # Lint YAML generally.
+  ansible-lint # Lint Ansible specifically.
+platforms:
+  - name: instance
+    image: ${docker_repo:-geerlingguy/docker-ubuntu1804-ansible:latest}
+    pre_build_image: true
+    volumes:
+        - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: true
+    command: ${docker_command:-""}
+provisioner:
+  name: ansible
+verifier:
+  name: ansible
